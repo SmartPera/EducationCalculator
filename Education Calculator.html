@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>SmartPera Education Fund Calculator</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:'DM Sans',sans-serif;background:#EBF5FB;color:#1A237E;min-height:100vh;}
+.header{background:linear-gradient(135deg,#0D47A1 0%,#1976D2 100%);padding:22px 20px 20px;text-align:center;}
+.logo-img{width:76px;height:76px;object-fit:cover;border-radius:18px;box-shadow:0 4px 20px rgba(0,0,0,0.3);border:2px solid rgba(255,255,255,0.2);display:block;margin:0 auto 10px;}
+.header-sub{font-family:'Montserrat',sans-serif;font-size:10px;color:rgba(255,255,255,0.65);letter-spacing:3px;text-transform:uppercase;margin-bottom:8px;font-weight:700;}
+.header-title{font-family:'Montserrat',sans-serif;font-size:20px;font-weight:900;color:#fff;line-height:1.25;}
+.container{max-width:500px;margin:0 auto;padding:16px;}
+.sec-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#1565C0;font-weight:700;margin:20px 0 10px;display:flex;align-items:center;gap:8px;}
+.sec-label::after{content:'';flex:1;height:1.5px;background:#BBDEFB;}
+.card{background:#fff;border:1.5px solid #BBDEFB;border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 2px 12px rgba(21,101,192,0.10);}
+.lbl{font-size:12px;font-weight:600;color:#37474F;margin-bottom:6px;display:block;}
+.lbl span{color:#1565C0;}
+
+/* COUNTRY TOGGLE */
+.cur-wrap{display:flex;background:#F0F8FF;border-radius:12px;padding:4px;gap:4px;border:1.5px solid #BBDEFB;}
+.cur-btn{flex:1;padding:12px 8px;border:none;border-radius:9px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;background:transparent;color:#78909C;transition:all 0.2s;-webkit-appearance:none;appearance:none;touch-action:manipulation;}
+.cur-btn.on{background:linear-gradient(135deg,#1976D2,#0D47A1);color:#fff;box-shadow:0 2px 8px rgba(21,101,192,0.3);}
+
+/* INPUTS */
+.inp{width:100%;background:#F0F8FF;border:1.5px solid #BBDEFB;border-radius:10px;padding:13px 14px;font-family:'DM Sans',sans-serif;font-size:16px;font-weight:500;color:#1A237E;outline:none;-webkit-appearance:none;appearance:none;}
+.inp:focus{border-color:#1976D2;box-shadow:0 0 0 3px rgba(25,118,210,0.12);}
+.money-row{display:flex;align-items:center;background:#F0F8FF;border:1.5px solid #BBDEFB;border-radius:10px;overflow:hidden;}
+.money-row:focus-within{border-color:#1976D2;box-shadow:0 0 0 3px rgba(25,118,210,0.12);}
+.money-pfx{padding:13px 0 13px 14px;font-size:16px;font-weight:700;color:#1565C0;white-space:nowrap;flex-shrink:0;user-select:none;}
+.money-inp{flex:1;min-width:0;background:transparent;border:none;outline:none;padding:13px 14px 13px 6px;font-family:'DM Sans',sans-serif;font-size:16px;font-weight:600;color:#1A237E;}
+.ig{margin-bottom:14px;}
+
+/* SLIDER */
+.sl-wrap{margin-bottom:14px;}
+.sl-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.sl-lbl{font-size:12px;font-weight:600;color:#37474F;}
+.sl-val{font-size:13px;font-weight:700;color:#1565C0;background:#E3F2FD;padding:2px 10px;border-radius:20px;}
+input[type=range]{width:100%;-webkit-appearance:none;appearance:none;height:6px;border-radius:3px;background:#BBDEFB;outline:none;cursor:pointer;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#1976D2,#0D47A1);cursor:pointer;box-shadow:0 2px 8px rgba(21,101,192,0.35);border:2px solid #fff;}
+input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#1976D2,#0D47A1);cursor:pointer;border:2px solid #fff;}
+
+/* INFO BOX */
+.info-box{background:#E3F2FD;border-radius:10px;padding:12px 14px;margin-bottom:14px;font-size:12px;color:#1565C0;line-height:1.6;border:1px solid #BBDEFB;}
+.info-box strong{font-weight:700;}
+
+/* RESULT HERO */
+.hero{background:linear-gradient(135deg,#0D47A1 0%,#1976D2 100%);border-radius:20px;padding:22px 18px;margin-bottom:12px;box-shadow:0 4px 24px rgba(21,101,192,0.16);}
+.hero-lbl{font-size:11px;text-transform:uppercase;letter-spacing:2px;color:rgba(255,255,255,0.65);margin-bottom:4px;}
+.hero-amt{font-family:'Montserrat',sans-serif;font-size:30px;font-weight:900;color:#fff;line-height:1.1;margin-bottom:4px;word-break:break-word;}
+.hero-sub{font-size:12px;color:rgba(255,255,255,0.65);}
+
+/* GRID */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+.mini{background:#fff;border:1.5px solid #BBDEFB;border-radius:14px;padding:14px 12px;box-shadow:0 2px 12px rgba(21,101,192,0.10);}
+.mini-lbl{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#78909C;margin-bottom:4px;font-weight:600;}
+.mini-val{font-size:15px;font-weight:700;color:#1A237E;}
+.mini-val.bl{color:#1565C0;}.mini-val.gd{color:#F57F17;}.mini-val.gr{color:#2E7D32;}
+
+/* BREAKDOWN */
+.brow{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid #E3F2FD;font-size:13px;}
+.brow:last-child{border-bottom:none;}
+.blbl{color:#78909C;font-weight:500;}.bval{font-weight:700;color:#1A237E;text-align:right;margin-left:8px;}
+
+/* TABLE */
+.tbl-wrap{overflow-x:auto;border-radius:14px;border:1.5px solid #BBDEFB;box-shadow:0 2px 12px rgba(21,101,192,0.10);margin-bottom:12px;}
+table{width:100%;border-collapse:collapse;background:#fff;font-size:13px;min-width:340px;}
+thead tr{background:linear-gradient(135deg,#0D47A1,#1976D2);color:#fff;}
+thead th{padding:11px 10px;font-size:10px;text-transform:uppercase;letter-spacing:1.2px;font-weight:700;text-align:right;white-space:nowrap;}
+thead th:first-child{text-align:center;}
+thead th:nth-child(2){text-align:center;}
+tbody tr{border-bottom:1px solid #E3F2FD;}
+tbody tr:last-child{border-bottom:none;}
+tbody td{padding:9px 10px;text-align:right;color:#1A237E;font-weight:500;}
+tbody td:first-child{text-align:center;font-weight:700;color:#1565C0;}
+tbody td:nth-child(2){text-align:center;color:#78909C;font-size:12px;}
+.age-b{display:inline-block;background:#E3F2FD;color:#1565C0;border-radius:20px;padding:2px 10px;font-size:12px;font-weight:700;}
+.fin-row td{background:#E8F5E9!important;font-weight:700!important;}
+.fin-row td:first-child .age-b{background:#C8E6C9;color:#2E7D32;}
+.gbadge{display:inline-block;background:#E8F5E9;color:#2E7D32;border-radius:20px;padding:3px 10px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-left:8px;}
+.total-row td{background:#FFF8E1!important;font-weight:800!important;color:#F57F17!important;border-top:2px solid #FFD54F;}
+
+/* CTA */
+.cta{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:18px 16px;background:linear-gradient(135deg,#25D366,#128C7E);border:none;border-radius:14px;font-family:'Montserrat',sans-serif;font-size:14px;font-weight:800;color:#fff;cursor:pointer;text-decoration:none;box-shadow:0 4px 20px rgba(37,211,102,0.3);margin-bottom:10px;letter-spacing:0.3px;touch-action:manipulation;-webkit-appearance:none;display:flex;}
+.wa-ic{width:24px;height:24px;fill:#fff;flex-shrink:0;}
+.footer{text-align:center;padding:16px;border-top:1.5px solid #BBDEFB;background:#fff;}
+.ft-logo{width:44px;height:44px;object-fit:cover;border-radius:10px;margin-bottom:6px;display:block;margin:0 auto 6px;}
+.ft-name{font-family:'Montserrat',sans-serif;font-size:15px;font-weight:800;color:#0D47A1;}
+.ft-role{font-size:11px;color:#78909C;margin-top:2px;}
+.disc{font-size:10px;color:#78909C;text-align:center;padding:0 10px 14px;line-height:1.6;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <img class="logo-img" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAQABAADASIAAhEBAxEB/8QAHQABAAEFAQEBAAAAAAAAAAAAAAECBAUGBwgDCf/EAF8QAAIBAwEEBQQLBxAHBwQDAQABAgMEBREGEiExB0FRYXETIoGRCBQyQlJyobGywdEVI2JzdJKzFhckJTM0NTZDU1RjgpOU0iY3RGSiwuFFVmV1g4TwRlWjpBgn8cP/xAAcAQEAAgMBAQEAAAAAAAAAAAAABQYBAwQCBwj/xAA9EQACAgECAwQHBwQCAgIDAQAAAQIDBAUREiExBkFRcRMiMjM0YYEUFSNSkaHBFkKx0VPhByRy8ENEVGL/2gAMAwEAAhEDEQA/APZQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/9k=" alt="SmartPera">
+  <div class="header-sub">Education Planning Tool</div>
+  <div class="header-title">How Much Will Your<br>Child's Education Cost?</div>
+</div>
+
+<div class="container">
+
+  <div class="sec-label">Where Will Your Child Study?</div>
+  <div class="card">
+    <div class="cur-wrap">
+      <button type="button" class="cur-btn on" id="btnPH">🇵🇭 Philippines</button>
+      <button type="button" class="cur-btn" id="btnSG">🇸🇬 Singapore</button>
+    </div>
+  </div>
+
+  <div class="sec-label">Child's Details</div>
+  <div class="card">
+    <div class="ig">
+      <label class="lbl">Child's Current Age <span>*</span></label>
+      <input type="number" inputmode="numeric" class="inp" id="childAge" value="5" min="0" max="17">
+    </div>
+    <div class="ig">
+      <label class="lbl">Age When College/University Starts <span>*</span></label>
+      <select class="inp" id="collegeAge"></select>
+    </div>
+    <div class="ig">
+      <label class="lbl">Number of Years in College/University <span>*</span></label>
+      <select class="inp" id="collegeYears"></select>
+    </div>
+  </div>
+
+  <div class="sec-label">Annual Tuition Cost (Today's Value)</div>
+  <div class="card">
+    <div class="ig">
+      <label class="lbl">Annual Tuition & Fees Today <span>*</span></label>
+      <div class="money-row">
+        <span class="money-pfx" id="pfx">₱</span>
+        <input type="number" inputmode="numeric" class="money-inp" id="annualCost" value="150000" min="1000">
+      </div>
+    </div>
+    <div class="info-box" id="costHint">
+      <strong>💡 Philippines Reference:</strong> Mid-range private universities average ₱100K–₱200K/yr. Premier schools (Ateneo, DLSU) can reach ₱200K–₱300K/yr.
+    </div>
+  </div>
+
+  <div class="sec-label">Education Inflation Rate</div>
+  <div class="card">
+    <div class="sl-wrap">
+      <div class="sl-row">
+        <span class="sl-lbl">Education Inflation Rate</span>
+        <span class="sl-val" id="infDisp">8%</span>
+      </div>
+      <input type="range" id="infSlider" min="2" max="15" step="1" value="8">
+      <div style="display:flex;justify-content:space-between;font-size:10px;color:#78909C;margin-top:5px;">
+        <span id="infLow">6% Conservative</span><span id="infHigh">12% Aggressive</span>
+      </div>
+    </div>
+    <div class="info-box" id="infHint">
+      <strong>📊 PH Education Inflation:</strong> Private university tuition in the Philippines increases ~8–10% per year on average — roughly 2× the general CPI.
+    </div>
+  </div>
+
+  <div class="sec-label">Your Education Fund Numbers</div>
+
+  <div class="hero">
+    <div class="hero-lbl">Total Education Fund Needed</div>
+    <div class="hero-amt" id="totalFund">–</div>
+    <div class="hero-sub">Inflation-adjusted total across all college years</div>
+  </div>
+
+  <div class="grid2">
+    <div class="mini">
+      <div class="mini-lbl">Today's Annual Cost</div>
+      <div class="mini-val gd" id="todayCost">–</div>
+      <div style="font-size:10px;color:#78909C;margin-top:2px;">present value</div>
+    </div>
+    <div class="mini">
+      <div class="mini-lbl">1st Year Cost</div>
+      <div class="mini-val bl" id="firstYrCost">–</div>
+      <div style="font-size:10px;color:#78909C;margin-top:2px;">when college starts</div>
+    </div>
+    <div class="mini">
+      <div class="mini-lbl">Years to Prepare</div>
+      <div class="mini-val bl" id="yearsToPrepare">–</div>
+      <div style="font-size:10px;color:#78909C;margin-top:2px;">years remaining</div>
+    </div>
+    <div class="mini">
+      <div class="mini-lbl">College Duration</div>
+      <div class="mini-val gr" id="collegeDur">–</div>
+      <div style="font-size:10px;color:#78909C;margin-top:2px;">years of tuition</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div style="font-size:11px;font-weight:700;color:#1565C0;margin-bottom:10px;letter-spacing:1px;text-transform:uppercase;">Calculation Breakdown</div>
+    <div class="brow"><span class="blbl">Annual Tuition Today</span><span class="bval" id="b1">–</span></div>
+    <div class="brow"><span class="blbl">Education Inflation Rate</span><span class="bval" id="b2">–</span></div>
+    <div class="brow"><span class="blbl">Years Until College Starts</span><span class="bval" id="b3">–</span></div>
+    <div class="brow"><span class="blbl">1st Year Inflated Tuition</span><span class="bval" id="b4">–</span></div>
+    <div class="brow"><span class="blbl">College Duration</span><span class="bval" id="b5">–</span></div>
+    <div class="brow"><span class="blbl">Total Education Fund Needed</span><span class="bval" id="b6">–</span></div>
+  </div>
+
+  <div class="sec-label">Year-by-Year Education Cost <span class="gbadge">↑ Inflation-Growing</span></div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Year</th><th>Child's Age</th><th>Annual Tuition</th><th>Cumulative Total</th></tr></thead>
+      <tbody id="tBody"></tbody>
+    </table>
+  </div>
+
+  <a class="cta" id="waBtn" href="#" target="_blank" rel="noopener">
+    <svg class="wa-ic" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    Plan My Child's Education Fund — Chat with Medz
+  </a>
+
+  <div class="disc">🎓 This calculator is for educational and illustrative purposes only. Results are based on the assumptions you provide and are not guaranteed. Actual tuition costs may vary depending on the school, course, and policy changes. Connect with Medz to explore personalised education fund strategies tailored to your family's goals.</div>
+</div>
+
+<div class="footer">
+  <img class="ft-logo" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAQABAADASIAAhEBAxEB/8QAHQABAAEFAQEBAAAAAAAAAAAAAAECBAUGBwgDCf/EAF8QAAIBAwEEBQQLBxAHBwQDAQABAgMEBREGEiExB0FRYXETIoGRCBQyQlJyobGywdEVI2JzdJKzFhckJTM0NTZDU1RjgpOU0iY3RGSiwuFFVmV1g4TwRlWjpBgn8cP/xAAcAQEAAgMBAQEAAAAAAAAAAAAABQYBAwQCBwj/xAA9EQACAgECAwQHBwQCAgIDAQAAAQIDBAUREiExBkFRcRMiMjM0YYEUFSNSkaHBFkKx0VPhByRy8ENEVGL/2gAMAwEAAhEDEQA/APZQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/9k=" alt="SmartPera">
+  <div class="ft-name">Medz Ron Macasaet</div>
+  <div class="ft-role">SmartPera Founder · Personal Finance for Filipinos in Singapore</div>
+</div>
+
+<script>
+(function() {
+  // ── State ──────────────────────────────────────────────
+  var country = 'PH'; // 'PH' or 'SG'
+
+  // ── Helpers ────────────────────────────────────────────
+  function sym() { return country === 'PH' ? '₱' : 'S$'; }
+  function fmtN(n) { return Math.round(n).toLocaleString('en-US'); }
+  function fmt(n) { return sym() + fmtN(n); }
+  function fmtS(n) {
+    if (n >= 1000000) return sym() + (n / 1000000).toFixed(2) + 'M';
+    return sym() + fmtN(n);
+  }
+  function el(id) { return document.getElementById(id); }
+  function txt(id, v) { var e = el(id); if (e) e.textContent = v; }
+
+  // ── Country defaults ───────────────────────────────────
+  var defaults = {
+    PH: {
+      collegeAge: 18,
+      collegeYears: 4,
+      annualCost: 150000,
+      inflation: 8,
+      infMin: 6, infMax: 12,
+      infLow: '6% Conservative',
+      infHigh: '12% Aggressive',
+      costHint: '<strong>💡 Philippines Reference:</strong> Mid-range private universities average ₱100K–₱200K/yr. Premier schools (Ateneo, DLSU) can reach ₱200K–₱300K/yr.',
+      infHint: '<strong>📊 PH Education Inflation:</strong> Private university tuition in the Philippines increases ~8–10% per year on average — roughly 2× the general CPI.'
+    },
+    SG: {
+      collegeAge: 19,
+      collegeYears: 4,
+      annualCost: 10000,
+      inflation: 3,
+      infMin: 2, infMax: 8,
+      infLow: '2% Conservative',
+      infHigh: '8% International',
+      costHint: '<strong>💡 Singapore Reference:</strong> Citizens: S$8K–S$11K/yr. PRs: S$12K–S$16K/yr. International students: S$15K–S$20K+/yr.',
+      infHint: '<strong>📊 SG Education Inflation:</strong> The 20-year average education inflation rate in Singapore is ~2.8% p.a. PRs and international students face higher fee increases (5–8%).'
+    }
+  };
+
+  // ── Build dropdowns ────────────────────────────────────
+  function buildDropdowns() {
+    var cEl = el('collegeAge');
+    cEl.innerHTML = '';
+    var startAge = country === 'PH' ? 16 : 17;
+    var endAge = 25;
+    var def = defaults[country].collegeAge;
+    for (var a = startAge; a <= endAge; a++) {
+      var o = document.createElement('option');
+      o.value = a; o.textContent = a;
+      if (a === def) o.selected = true;
+      cEl.appendChild(o);
+    }
+
+    var yEl = el('collegeYears');
+    yEl.innerHTML = '';
+    for (var y = 2; y <= 6; y++) {
+      var o2 = document.createElement('option');
+      o2.value = y; o2.textContent = y + ' years';
+      if (y === defaults[country].collegeYears) o2.selected = true;
+      yEl.appendChild(o2);
+    }
+  }
+
+  // ── Apply country settings ─────────────────────────────
+  function applyCountry() {
+    var d = defaults[country];
+    el('pfx').textContent = sym();
+    el('annualCost').value = d.annualCost;
+    el('infSlider').min = d.infMin;
+    el('infSlider').max = d.infMax;
+    el('infSlider').value = d.inflation;
+    el('infDisp').textContent = d.inflation + '%';
+    el('infLow').textContent = d.infLow;
+    el('infHigh').textContent = d.infHigh;
+    el('costHint').innerHTML = d.costHint;
+    el('infHint').innerHTML = d.infHint;
+    buildDropdowns();
+    calc();
+  }
+
+  // ── Country toggle ─────────────────────────────────────
+  el('btnPH').addEventListener('click', function() {
+    country = 'PH';
+    el('btnPH').className = 'cur-btn on';
+    el('btnSG').className = 'cur-btn';
+    applyCountry();
+  });
+  el('btnSG').addEventListener('click', function() {
+    country = 'SG';
+    el('btnSG').className = 'cur-btn on';
+    el('btnPH').className = 'cur-btn';
+    applyCountry();
+  });
+
+  // ── Slider display ─────────────────────────────────────
+  el('infSlider').addEventListener('input', function() {
+    el('infDisp').textContent = this.value + '%';
+    calc();
+  });
+
+  // ── Input listeners ────────────────────────────────────
+  el('childAge').addEventListener('input', function() { calc(); });
+  el('collegeAge').addEventListener('change', function() { calc(); });
+  el('collegeYears').addEventListener('change', function() { calc(); });
+  el('annualCost').addEventListener('input', function() { calc(); });
+
+  // ── Main calc ──────────────────────────────────────────
+  function calc() {
+    var childAge    = parseInt(el('childAge').value) || 5;
+    var collegeAge  = parseInt(el('collegeAge').value) || defaults[country].collegeAge;
+    var collegeYrs  = parseInt(el('collegeYears').value) || defaults[country].collegeYears;
+    var annualCost  = parseFloat(el('annualCost').value) || defaults[country].annualCost;
+    var inflation   = parseFloat(el('infSlider').value) / 100;
+
+    var yearsTillCollege = Math.max(0, collegeAge - childAge);
+
+    // Calculate inflated cost for each year of college
+    var totalFund = 0;
+    var yearData = [];
+    var cumulative = 0;
+    var currentYear = new Date().getFullYear();
+
+    for (var i = 0; i < collegeYrs; i++) {
+      var yearsFromNow = yearsTillCollege + i;
+      var inflatedCost = annualCost * Math.pow(1 + inflation, yearsFromNow);
+      cumulative += inflatedCost;
+      totalFund += inflatedCost;
+
+      yearData.push({
+        year: currentYear + yearsFromNow,
+        age: collegeAge + i,
+        cost: inflatedCost,
+        cumulative: cumulative,
+        isLast: (i === collegeYrs - 1)
+      });
+    }
+
+    var firstYearCost = annualCost * Math.pow(1 + inflation, yearsTillCollege);
+
+    // Update summary
+    txt('totalFund', fmtS(totalFund));
+    txt('todayCost', fmt(annualCost) + '/yr');
+    txt('firstYrCost', fmt(firstYearCost) + '/yr');
+    txt('yearsToPrepare', yearsTillCollege + ' yrs');
+    txt('collegeDur', collegeYrs + ' yrs');
+
+    // Breakdown
+    txt('b1', fmt(annualCost) + '/yr');
+    txt('b2', (inflation * 100).toFixed(0) + '% p.a.');
+    txt('b3', yearsTillCollege + ' years');
+    txt('b4', fmt(firstYearCost) + '/yr');
+    txt('b5', collegeYrs + ' years');
+    txt('b6', fmtS(totalFund));
+
+    // Table
+    var tbody = el('tBody');
+    tbody.innerHTML = '';
+
+    // Pre-college savings years
+    for (var j = 0; j < yearsTillCollege; j++) {
+      var projCost = annualCost * Math.pow(1 + inflation, j);
+      var tr = document.createElement('tr');
+      tr.style.opacity = '0.5';
+      tr.innerHTML =
+        '<td>' + (currentYear + j) + '</td>' +
+        '<td><span class="age-b">' + (childAge + j) + '</span></td>' +
+        '<td style="color:#78909C;font-style:italic;">(' + fmt(projCost) + ')</td>' +
+        '<td style="color:#78909C;font-style:italic;">Saving phase</td>';
+      tbody.appendChild(tr);
+    }
+
+    // College years
+    for (var k = 0; k < yearData.length; k++) {
+      var d = yearData[k];
+      var tr2 = document.createElement('tr');
+      if (d.isLast) tr2.className = 'fin-row';
+      tr2.innerHTML =
+        '<td>' + d.year + '</td>' +
+        '<td><span class="age-b">' + d.age + '</span></td>' +
+        '<td>' + fmt(d.cost) + '</td>' +
+        '<td>' + fmt(d.cumulative) + '</td>';
+      tbody.appendChild(tr2);
+    }
+
+    // Total row
+    var trTotal = document.createElement('tr');
+    trTotal.className = 'total-row';
+    trTotal.innerHTML =
+      '<td colspan="2" style="text-align:right;padding-right:10px;">TOTAL FUND NEEDED →</td>' +
+      '<td></td>' +
+      '<td>' + fmtS(totalFund) + '</td>';
+    tbody.appendChild(trTotal);
+
+    // WhatsApp link
+    var countryName = country === 'PH' ? 'the Philippines' : 'Singapore';
+    var msg = encodeURIComponent(
+      'Hi Medz, I used the SmartPera Education Calculator. My child is ' + childAge +
+      ' years old and I need ' + fmtS(totalFund) +
+      ' for their college education in ' + countryName +
+      ' starting at age ' + collegeAge +
+      '. I would like to explore how to build this education fund!'
+    );
+    el('waBtn').href = 'https://wa.me/6584285361?text=' + msg;
+  }
+
+  // ── Init ───────────────────────────────────────────────
+  applyCountry();
+})();
+</script>
+</body>
+</html>
